@@ -23,7 +23,7 @@ async fn rocket() -> _ {
     let cors = rocket_cors::CorsOptions {
         allowed_origins: AllowedOrigins::All,
         allowed_methods: vec![Method::Get, Method::Post, Method::Delete, Method::Put].into_iter().map(From::from).collect(),
-        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
+        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept", "Access-Token"]),
         allow_credentials: true,
         ..Default::default()
     }

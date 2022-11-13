@@ -27,3 +27,4 @@ localhost:7776/rgroutes/namespace/<namespace>
 ## 技术栈
 - rustc 1.66.0-nightly (bf15a9e52 2022-10-14)
 - VsCode
+- Rocket
