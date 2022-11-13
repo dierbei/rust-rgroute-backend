@@ -1,45 +1,41 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
-use std::error::Error;
-use rocket_contrib::json::Json;
-use serde::{Serialize, Deserialize};
 use rocket::http::Method;
 use rocket_cors::{AllowedHeaders, AllowedOrigins};
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct User {
-    // #[serde(rename(serialize = "uid", deserialize = "id"))]
-    pub id: i32,
-    pub name: String,
-}
+use rgroutes::handler;
 
-#[get("/todo")]
-fn todo() -> Json<User> {
-    Json(User{id: 1, name: String::from("hedui")})
-}
-
-#[post("/todo")]
-fn postTodo() -> Json<User> {
-    Json(User{id: 1, name: String::from("heduipost")})
-}
+mod rgroutes;
 
 #[get("/")]
 fn index() -> &'static str {
     "Hello, world!"
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+#[post("/")]
+fn post_index() -> &'static str {
+    "Hello, world!"
+}
+
+#[launch]
+async fn rocket() -> _ {
     let cors = rocket_cors::CorsOptions {
         allowed_origins: AllowedOrigins::All,
-        allowed_methods: vec![Method::Get].into_iter().map(From::from).collect(),
-        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept", "jwt-token"]),
+        allowed_methods: vec![Method::Get, Method::Post, Method::Delete, Method::Put].into_iter().map(From::from).collect(),
+        allowed_headers: AllowedHeaders::some(&["Authorization", "Accept"]),
         allow_credentials: true,
         ..Default::default()
     }
-    .to_cors()?;
+        .to_cors().unwrap();
 
-    rocket::ignite().mount("/", routes![index, todo, postTodo]).attach(cors).launch();
+    // rgroutes::handler::list_rgroute().await;
 
-    Ok(())
+    rocket::build().attach(cors).mount("/", routes![
+        handler::list_rgroute,
+        handler::get_rgroute,
+        handler::delete_rgroute,
+        handler::create_rgroute,
+        handler::update_rgroute,
+    ])
 }
