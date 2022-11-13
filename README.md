@@ -15,7 +15,7 @@ localhost:7776/rgroutes/namespace/<namespace>
 localhost:7776/rgroutes/namespace/<namespace>/name/<name>
 
 # 创建
-localhost:7776/rgroutes", format = "json", data="<req>
+localhost:7776/rgroutes
 
 # 删除
 localhost:7776/rgroutes/namespace/<namespace>
